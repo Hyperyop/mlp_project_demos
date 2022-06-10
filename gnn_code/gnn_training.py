@@ -268,7 +268,7 @@ def start_trail():
         loss=tf.keras.losses.MeanAbsoluteError(),
         metrics=[tf.keras.metrics.MeanAbsoluteError(name="acc")],
     )
-
+    gnn.summary()
     # load train data
     ai = np.load("features/fixed_train_X.npy")
     ei = np.load("features/fixed_train_na.npy")

@@ -1,0 +1,5 @@
+cif_splits
+*.tar.gz
+*.npz
+__pycache__
+questions.txt
