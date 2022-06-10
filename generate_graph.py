@@ -52,3 +52,4 @@ def generate_graph(cif_str):
         "node_radial_feature": radial_features,
         "edges": bonds,
     }
+
