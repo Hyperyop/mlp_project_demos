@@ -1,9 +1,10 @@
 import math
 import os
+import pickle
 import warnings
 from datetime import datetime
 from time import perf_counter
-
+from prepare_data import *
 import joblib
 import matplotlib.pyplot as plt
 import numpy as np
@@ -210,7 +211,7 @@ def start_trail():
     dropout_rate = 0.10
     normalize = False
     n_gcl = 6  # number of GraphConvLayer
-    batch_size = 128
+    batch_size = 20
     learning_rate = 1e-4
 
     # Number of inputs
@@ -268,30 +269,41 @@ def start_trail():
         loss=tf.keras.losses.MeanAbsoluteError(),
         metrics=[tf.keras.metrics.MeanAbsoluteError(name="acc")],
     )
-
+    gnn.summary()
     # load train data
-    ai = np.load("features/fixed_train_X.npy")
-    ei = np.load("features/fixed_train_na.npy")
-    eo = np.load("features/fixed_train_nb.npy")
-    mask = np.load(f"features/combined_train_{mask_type}.npy")
-    ao = np.load("features/scaled_train_y.npy")
+    # ai = np.load("features/fixed_train_X.npy")
+    # ei = np.load("features/fixed_train_na.npy")
+    # eo = np.load("features/fixed_train_nb.npy")
+    # mask = np.load(f"features/combined_train_{mask_type}.npy")
+    # ao = np.load("features/scaled_train_y.npy")
+    with open('dic.pkl', 'rb') as f:
+        ae=pickle.load( f)
+
+
+    vectorize_layer = tf.keras.layers.experimental.preprocessing.TextVectorization(
+    max_tokens=80,
+    output_sequence_length=1)
+    vectorize_layer.adapt(ae)
+    src_path=Path("processed_data/test_set")
+    batches= create_batches(src_path)
+    ao,ai,ei,eo,mask = parser(batches,ll,el,vectorize_layer,79)
     # load dev data
-    dai = np.load("features/fixed_dev_X.npy")
-    dei = np.load("features/fixed_dev_na.npy")
-    deo = np.load("features/fixed_dev_nb.npy")
-    dmask = np.load(f"features/combined_dev_{mask_type}.npy")
-    dao = np.load("features/scaled_dev_y.npy")
+    # dai = np.load("features/fixed_dev_X.npy")
+    # dei = np.load("features/fixed_dev_na.npy")
+    # deo = np.load("features/fixed_dev_nb.npy")
+    # dmask = np.load(f"features/combined_dev_{mask_type}.npy")
+    # dao = np.load("features/scaled_dev_y.npy")
 
     # make training batches
     train_seq = GraphSequence(ai, ei, eo, mask, ao, batch_size)
-    dev_seq = GraphSequence(dai, dei, deo, dmask, dao, batch_size)
-
+    # dev_seq = GraphSequence(dai, dei, deo, dmask, dao, batch_size)
+    print(train_seq[0])
     # starts training
     train_start = perf_counter()
     history = gnn.fit(
         x=train_seq,
         epochs=num_epochs,
-        validation_data=dev_seq,
+        # validation_data=dev_seq,
     )
     train_time = (perf_counter() - train_start) / 3600
     output_text += f"train_time,{train_time}_hrs\n"

@@ -5,9 +5,9 @@ import numpy as np
 
 from generate_graph import generate_graph
 
-n_procs = 2
-src_path = Path("example_input")
-dst_path = Path("example_output")
+n_procs = 16
+src_path = Path("cif_splits/test_set")
+dst_path = Path("processed_data/test_set")
 
 
 def main(cif_path):
