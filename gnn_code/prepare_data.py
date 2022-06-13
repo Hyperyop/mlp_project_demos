@@ -34,8 +34,6 @@ def parser(batches,ll,el,vectorize_layer,dic_length,batch_size=79):
         ai[i]=np.pad(vectorize_layer(a[j])[:,0], pad_width=(0, ll-len(a[j])), constant_values=(dic_length, dic_length))
         ei[i]=np.pad(temp[0], pad_width=(0, el-len(temp[0])), constant_values=(ll-1, ll-1))
         eo[i]=np.pad(temp[1], pad_width=(0, el-len(temp[0])), constant_values=(ll-1, ll-1))
-        if i ==0:
-            print(ei[i])
         ao[i]=np.pad(d[j], pad_width=(0, ll-len(a[j])), constant_values=(0, 0))
 #     mask=ao!=0
     mask=ai<dic_length

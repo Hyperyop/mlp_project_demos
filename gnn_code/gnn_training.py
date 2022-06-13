@@ -233,7 +233,7 @@ def start_trail():
     print("======Trail Starts======")
 
     # construct input layers
-    a_input = tf.keras.Input(shape=(ll, vl), dtype=tf.float32)
+    a_input = tf.keras.Input(shape=(ll, 1), dtype=tf.float32)
     mask_input = tf.keras.Input(shape=(ll, 1))
     ei_input = tf.keras.Input(shape=(el), dtype=tf.int32)
     eo_input = tf.keras.Input(shape=(el), dtype=tf.int32)
